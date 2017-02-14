@@ -1,0 +1,4 @@
+--name
+volt-language-server
+--dep
+watt
