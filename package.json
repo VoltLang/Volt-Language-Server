@@ -5,19 +5,26 @@
     "version": "0.0.1",
     "publisher": "bhelyer",
     "engines": {
-        "vscode": "^1.5.0"
+        "vscode": "^1.8.0"
     },
     "categories": [
-        "Other"
+        "Languages"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onLanguage:volt"
     ],
     "main": "./out/src/extension",
     "contributes": {
-        "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
+        "languages": [{
+            "id": "volt",
+            "aliases": ["Volt", "volt"],
+            "extensions": [".volt"],
+            "configuration": "./volt.configuration.json"
+        }],
+        "grammars": [{
+            "language": "volt",
+            "scopeName": "text.volt",
+            "path": "./volt.tmLanguage"
         }]
     },
     "scripts": {
@@ -32,5 +39,9 @@
         "mocha": "^2.3.3",
         "@types/node": "^6.0.40",
         "@types/mocha": "^2.2.32"
+        
+    },
+    "dependencies": {
+        "vscode-languageclient": "^3.0.4"
     }
 }
