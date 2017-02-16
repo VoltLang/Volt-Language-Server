@@ -14,19 +14,71 @@
 			<key>name</key>
 			<string>storage.type.volt</string>
 			<key>match</key>
-			<string>\b(bool|char|dchar|wchar|i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|string|size_t|ptrdiff_t)\b</string>
+			<string>\b(bool|char|dchar|wchar|i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|string|size_t|ptrdiff_t|void|auto)\b</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>keyword.control.volt</string>
 			<key>match</key>
-			<string>\b(if|while|do|for|foreach|with|switch|return)\b</string>
+			<string>\b(if|while|do|for|foreach|with|switch|return|throw|default|case|goto|break|continue|else|foreach_reverse)\b</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>keyword.other.volt</string>
 			<key>match</key>
-			<string>\b(fn|dg|import|module|version)\b</string>
+			<string>\b(fn|dg|import|module|version|class|struct|enum|this|super|public|private|protected|override|assert|new|cast|scope|ref|out|const|scope)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>string.quoted.single</string>
+			<key>begin</key>
+			<string>'</key>
+			<key>end</key>
+			<string>'</key>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>string.quoted.double</string>
+			<key>begin</key>
+			<string>("|`)</key>
+			<key>end</key>
+			<string>("|`)</key>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>constant.numeric</string>
+			<key>match</key>
+			<string>(1|2|3|4|5|6|7|8|9|0|\.)(1|2|3|4|5|6|7|8|9|0|\.|_)*</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>constant.language</string>
+			<key>match</key>
+			<string>\b(true|false|null)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>comment.block</string>
+			<key>begin</key>
+			<string>(/\*|/\+)</key>
+			<key>end</key>
+			<string>(\*/|\+/)</key>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>comment.block.documentation</string>
+			<key>begin</key>
+			<string>(/\*\*|/\+\+)</key>
+			<key>end</key>
+			<string>(\*/|\+/)</key>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>comment.line</string>
+			<key>begin</key>
+			<string>//</string>
+			<key>end</key>
+			<string>$</string>
 		</dict>
 	</array>
 	<key>scopeName</key>
