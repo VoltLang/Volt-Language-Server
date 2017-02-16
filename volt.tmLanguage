@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>*.volt</string>
+	</array>
+	<key>name</key>
+	<string>volt</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>storage.type.volt</string>
+			<key>match</key>
+			<string>\b(bool|char|dchar|wchar|i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|string|size_t|ptrdiff_t)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>keyword.control.volt</string>
+			<key>match</key>
+			<string>\b(if|while|do|for|foreach|with|switch|return)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>keyword.other.volt</string>
+			<key>match</key>
+			<string>\b(fn|dg|import|module|version)\b</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>text.volt</string>
+</dict>
+</plist>
