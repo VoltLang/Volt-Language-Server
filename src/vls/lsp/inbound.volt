@@ -11,12 +11,7 @@ import watt.text.string : split, strip;
 import watt.text.format : format;
 
 import vls.lsp.constants;
-
-struct LspMessage
-{
-	contentLength: size_t;
-	content: string;
-}
+import vls.lsp.message;
 
 /**
  * Listen for request objects, dispatch appropriately.
