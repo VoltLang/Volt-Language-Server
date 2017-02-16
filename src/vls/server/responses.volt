@@ -5,6 +5,8 @@ import watt.text.string;
 import watt.text.format;
 import watt.text.json.rpc;
 
+import vls.lsp.constants;
+
 fn responseInitialized(ro: RequestObject) string
 {
 	msg := format(`
@@ -62,7 +64,9 @@ fn responseShutdown(ro: RequestObject) string
 {
 	msg := format(`
 		{
-			"id":%s
+			"id":%s,
+			"result": {
+			}
 		}
 	`, toString(ro.id.integer()));
 	return compress(msg);
