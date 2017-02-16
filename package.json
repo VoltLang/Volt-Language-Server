@@ -17,8 +17,8 @@
     "contributes": {
         "languages": [{
             "id": "volt",
-            "aliases": ["Volt", "volt"],
             "extensions": [".volt"],
+            "aliases": ["Volt"],
             "configuration": "./volt.configuration.json"
         }],
         "grammars": [{
