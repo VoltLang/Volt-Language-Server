@@ -40,9 +40,17 @@
 			<key>name</key>
 			<string>string.quoted.double</string>
 			<key>begin</key>
-			<string>("|`)</key>
+			<string>`</key>
 			<key>end</key>
-			<string>("|`)</key>
+			<string>`</key>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>string.quoted.double</string>
+			<key>begin</key>
+			<string>"</key>
+			<key>end</key>
+			<string>"</key>
 		</dict>
 		<dict>
 			<key>name</key>
