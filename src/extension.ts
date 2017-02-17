@@ -14,8 +14,6 @@ export function activate(context: ExtensionContext) {
     const executablExt = process.platform == 'win32' ? '.exe' : '';
 	const executable = 'vls' + executablExt;
     const command = context.asAbsolutePath(executable);
-    console.log(command);
-    console.log("YO!");
     const serverOptions = { command };
     
     // Options to control the language client
