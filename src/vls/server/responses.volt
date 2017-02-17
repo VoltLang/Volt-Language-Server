@@ -6,6 +6,7 @@ import watt.text.format;
 import watt.text.json.rpc;
 
 import vls.lsp.constants;
+import vls.server.error;
 
 fn responseInitialized(ro: RequestObject) string
 {
@@ -34,7 +35,7 @@ fn responseInitialized(ro: RequestObject) string
 					"definitionProvider": false,
 					"referencesProvider": false,
 					"documentHighlightProvider": false,
-					"documentSymbolProvider": false,
+					"documentSymbolProvider": true,
 					"workspaceSymbolProvider": false,
 					"codeActionProvider": false,
 					"codeLensProvider": {
@@ -57,6 +58,20 @@ fn responseInitialized(ro: RequestObject) string
 			}
 		}
 	`, toString(ro.id.integer()));
+	return compress(msg);
+}
+
+fn responseError(ro: RequestObject, err: Error) string
+{
+	msg := format(`
+		{
+			"id": %s,
+			"error": {
+				"code": %s,
+				"message": %s
+			}
+		}
+	`, toString(ro.id.integer()), err.code, err.message);
 	return compress(msg);
 }
 

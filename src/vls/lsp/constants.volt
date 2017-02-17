@@ -7,3 +7,4 @@ enum LENGTH_HEADER = "Content-Length";
 enum TYPE_HEADER = "Content-Type";
 
 enum ERROR_SERVER_END = -32000;
+enum ERROR_INVALID_PARAMS = -32602;
