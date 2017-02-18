@@ -9,6 +9,8 @@ import watt.text.json.rpc;
 import parsec.arg;
 import parsec.parser.base;
 import parsec.parser.toplevel;
+import parsec.parser.errors;
+import parsec.parser.parser;
 import parsec.lex.source;
 import parsec.lex.lexer;
 import ir = parsec.ir.ir;
@@ -22,9 +24,6 @@ class VoltLanguageServer
 public:
 	logf: OutputFileStream;
 	settings: Settings;
-
-private:
-	mDatabase: ir.Module[string];
 
 public:
 	this()
@@ -63,7 +62,10 @@ private:
 				send(responseError(ro, err));
 				return CONTINUE_LISTENING;
 			}
-			parse(uri);
+			mod := parse(uri);
+			send(responseSymbolInformation(ro, uri, mod));
+			//logf.writefln("%s", responseSymbolInformation(ro, uri, mod));
+			//logf.flush();
 			return CONTINUE_LISTENING;
 		default:
 			// TODO: Return error
@@ -74,7 +76,7 @@ private:
 		assert(false);
 	}
 
-	fn parse(uri: string)
+	fn parse(uri: string) ir.Module
 	{
 		// TEMPORARY
 		filepath := uri["file:///".length .. $];
@@ -82,9 +84,19 @@ private:
 		src := new Source(cast(string)read(filepath), filepath);
 		mod: ir.Module;
 		ps := new ParserStream(lex(src), settings);
-		parseModule(ps, out mod);
-		mDatabase[uri] = mod;
-		logf.writefln("Parsed %s %s", filepath, mod !is null);
+		ps.get();  // Skip begin
+		status := parseModule(ps, out mod);
+		if (status != ParseStatus.Succeeded) {
+			// TODO: Make the parsec error function not throw, but just give the error string.
+			foreach (err; ps.parserErrors) {
+				logf.writefln("Failure %s @ line %s", cast(i32)err.kind, err.location.line);
+				if (cast(i32)err.kind == 6) {
+					expected := cast(ParserExpected)err;
+					logf.writefln("Expected %s", expected.message);
+				}
+			}
+		}
 		logf.flush();
+		return mod;
 	}
 }

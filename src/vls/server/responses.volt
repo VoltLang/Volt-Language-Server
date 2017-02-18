@@ -5,8 +5,12 @@ import watt.text.string;
 import watt.text.format;
 import watt.text.json.rpc;
 
+import ir = parsec.ir.ir;
+import parsec.visitor.visitor : accept;
+
 import vls.lsp.constants;
 import vls.server.error;
+import vls.server.symbolgatherervisitor;
 
 fn responseInitialized(ro: RequestObject) string
 {
@@ -85,6 +89,21 @@ fn responseShutdown(ro: RequestObject) string
 		}
 	`, toString(ro.id.integer()));
 	return compress(msg);
+}
+
+fn responseSymbolInformation(ro: RequestObject, uri: string, mod: ir.Module) string
+{
+	sgv := new SymbolGathererVisitor();
+	msg := format(`{ "id":%s, "result": [`, toString(ro.id.integer()));
+	accept(mod, sgv);
+	foreach (i, symbol; sgv.symbols) {
+		msg ~= symbol.jsonString(uri);
+		if (i < sgv.symbols.length - 1) {
+			msg ~= ", ";
+		}
+	}
+	msg ~= "]}";
+	return msg;
 }
 
 private:
