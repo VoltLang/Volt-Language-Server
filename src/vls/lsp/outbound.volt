@@ -4,12 +4,15 @@ import vls.lsp.message;
 import vls.lsp.constants;
 
 import watt.io;
+import watt.io.streams;
 
 /**
  * Send `msg` to the client, with the appropriate headers.
  */
-fn send(msg: string)
+fn send(msg: string, logf: OutputFileStream)
 {
+	logf.writefln("SENDING: %s", msg);
+	logf.flush();
 	version (Windows) {
 		output.writefln("%s:%s", LENGTH_HEADER, msg.length);
 		output.writeln("");

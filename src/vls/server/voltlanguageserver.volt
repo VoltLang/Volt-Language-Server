@@ -50,14 +50,14 @@ private:
 	{
 		switch (ro.methodName) {
 		case "initialize":
-			send(responseInitialized(ro));
+			send(responseInitialized(ro), logf);
 			return CONTINUE_LISTENING;
 		case "initialized":
 			assert(ro.notification);
 			return CONTINUE_LISTENING;
 		case "shutdown":
 			retval = 0;
-			send(responseShutdown(ro));
+			send(responseShutdown(ro), logf);
 			return CONTINUE_LISTENING;
 		case "exit":
 			return STOP_LISTENING;
@@ -67,7 +67,7 @@ private:
 			if (err !is null) {
 				logf.writefln("SENDING ERROR");
 				logf.flush();
-				send(responseError(ro, err));
+				send(responseError(ro, err), logf);
 				return CONTINUE_LISTENING;
 			}
 			logf.writefln("RECEIVED: textDocument/documentSymbol %s", uri);
@@ -80,7 +80,7 @@ private:
 			logf.flush();
 			logf.writefln("Sending functions: %s", reply);
 			logf.flush();
-			send(reply);
+			send(reply, logf);
 			//logf.writefln("%s", responseSymbolInformation(ro, uri, mod));
 			//logf.flush();
 			return CONTINUE_LISTENING;
