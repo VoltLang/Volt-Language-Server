@@ -36,7 +36,7 @@ fn locationToRange(loc: Location) string
 
 fn locationToPosition(loc: Location) string
 {
-	return format(`{ "line": %s, "character": %s }`, loc.line, loc.column);
+	return format(`{ "line": %s, "character": %s }`, loc.line - 1, loc.column - 1);
 }
 
 class SymbolGathererVisitor : NullVisitor
