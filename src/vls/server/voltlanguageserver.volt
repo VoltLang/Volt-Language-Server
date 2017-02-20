@@ -28,7 +28,7 @@ public:
 public:
 	this()
 	{
-		logf = new OutputFileStream("C:/Users/Bernard/Desktop/log.txt");
+		logf = new OutputFileStream("log.txt");
 	}
 
 	/// LSP listen callback.

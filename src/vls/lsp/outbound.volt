@@ -10,8 +10,15 @@ import watt.io;
  */
 fn send(msg: string)
 {
-	output.writefln("%s:%s", LENGTH_HEADER, msg.length);
-	output.writeln("");
-	output.write(msg);
-	output.flush();
+	version (Windows) {
+		output.writefln("%s:%s", LENGTH_HEADER, msg.length);
+		output.writeln("");
+		output.write(msg);
+		output.flush();
+	} else {
+		output.writef("%s:%s\r\n", LENGTH_HEADER, msg.length);
+		output.write("\r\n");
+		output.write(msg);
+		output.flush();
+	}
 }
