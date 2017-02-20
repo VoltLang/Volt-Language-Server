@@ -96,8 +96,12 @@ private:
 	fn parse(uri: string) ir.Module
 	{
 		// TEMPORARY
-		filepath := uri["file:///".length .. $];
-		filepath = filepath.replace("%3A", ":");
+		version (Windows) {
+			filepath := uri["file:///".length .. $];
+			filepath = filepath.replace("%3A", ":");
+		} else {
+			filepath := uri["file://".length .. $];
+		}
 		log("<source>");
 		src := new Source(cast(string)read(filepath), filepath);
 		log("</source>");
