@@ -9,7 +9,7 @@ import parsec.lex.location;
 
 import vls.lsp.constants;
 
-struct Symbol
+class Symbol
 {
 	name: string;
 	loc: Location;
@@ -18,7 +18,7 @@ struct Symbol
 	fn jsonString(uri: string) string
 	{
 		return format(`{ "name": "%s", "kind": %s, "location": %s }`,
-			name, 12, locationToJsonString(loc, uri));
+			name, type, locationToJsonString(loc, uri));
 	}
 }
 
@@ -47,7 +47,7 @@ public:
 public:
 	override fn enter(func: ir.Function) Status
 	{
-		sym: Symbol;
+		sym := new Symbol();
 		sym.name = func.name;
 		sym.loc = func.location;
 		sym.type = SYMBOL_FUNCTION;

@@ -59,11 +59,18 @@ private:
 			uri: string;
 			err := parseTextDocument(ro.params, out uri);
 			if (err !is null) {
+				logf.writefln("SENDING ERROR");
+				logf.flush();
 				send(responseError(ro, err));
 				return CONTINUE_LISTENING;
 			}
+			logf.writefln("RECEIVED: textDocument/documentSymbol %s", uri);
+			logf.flush();
 			mod := parse(uri);
-			send(responseSymbolInformation(ro, uri, mod));
+			reply := responseSymbolInformation(ro, uri, mod);
+			logf.writefln("Sending functions: %s", reply);
+			logf.flush();
+			send(reply);
 			//logf.writefln("%s", responseSymbolInformation(ro, uri, mod));
 			//logf.flush();
 			return CONTINUE_LISTENING;
