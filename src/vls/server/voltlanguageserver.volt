@@ -5,6 +5,7 @@ import watt.io;
 import watt.io.file;
 import watt.text.string;
 import watt.text.json.rpc;
+import watt.process.environment;
 
 import parsec.arg;
 import parsec.parser.base;
@@ -28,7 +29,12 @@ public:
 public:
 	this()
 	{
-		logf = new OutputFileStream("log.txt");
+		version (Windows) {
+			env := retrieveEnvironment();
+			logf = new OutputFileStream(env.getOrNull("USERPROFILE") ~ "/Desktop/vlslog.txt");
+		} else {
+			logf = new OutputFileStream("/tmp/vlslog.txt");
+		}
 	}
 
 	/// LSP listen callback.
