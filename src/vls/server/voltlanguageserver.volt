@@ -67,7 +67,11 @@ private:
 			logf.writefln("RECEIVED: textDocument/documentSymbol %s", uri);
 			logf.flush();
 			mod := parse(uri);
+			logf.writefln("Building response.");
+			logf.flush();
 			reply := responseSymbolInformation(ro, uri, mod);
+			logf.writefln("Built response.");
+			logf.flush();
 			logf.writefln("Sending functions: %s", reply);
 			logf.flush();
 			send(reply);
@@ -88,11 +92,19 @@ private:
 		// TEMPORARY
 		filepath := uri["file:///".length .. $];
 		filepath = filepath.replace("%3A", ":");
+		log("<source>");
 		src := new Source(cast(string)read(filepath), filepath);
+		log("</source>");
 		mod: ir.Module;
+		log("<ps>");
 		ps := new ParserStream(lex(src), settings);
+		log("</ps>");
 		ps.get();  // Skip begin
+		logf.writefln("A");
+		logf.flush();
 		status := parseModule(ps, out mod);
+		logf.writefln("B");
+		logf.flush();
 		if (status != ParseStatus.Succeeded) {
 			// TODO: Make the parsec error function not throw, but just give the error string.
 			foreach (err; ps.parserErrors) {
@@ -101,9 +113,16 @@ private:
 					expected := cast(ParserExpected)err;
 					logf.writefln("Expected %s", expected.message);
 				}
+				logf.flush();
 			}
 		}
 		logf.flush();
 		return mod;
+	}
+
+	fn log(s: string)
+	{
+		logf.writefln(s);
+		logf.flush();
 	}
 }
