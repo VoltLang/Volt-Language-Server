@@ -29,6 +29,9 @@ public:
 public:
 	this()
 	{
+		settings.warningsEnabled = false;
+		settings.internalD = true;
+
 		version (Windows) {
 			env := retrieveEnvironment();
 			logf = new OutputFileStream(env.getOrNull("USERPROFILE") ~ "/Desktop/vlslog.txt");
