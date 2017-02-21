@@ -2,6 +2,7 @@ module vls.server.voltlanguageserver;
 
 import main : retval;
 import watt.io;
+import watt.path;
 import watt.io.file;
 import watt.text.string;
 import watt.text.json.rpc;
@@ -27,8 +28,9 @@ public:
 	settings: Settings;
 
 public:
-	this()
+	this(argZero: string)
 	{
+		settings = new Settings(argZero, getExecDir());
 		settings.warningsEnabled = false;
 		settings.internalD = true;
 
