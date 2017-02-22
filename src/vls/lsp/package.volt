@@ -8,3 +8,5 @@ public import vls.lsp.message;
 public import vls.lsp.constants;
 public import vls.lsp.inbound;
 public import vls.lsp.outbound;
+public import vls.lsp.error;
+public import vls.lsp.requests;

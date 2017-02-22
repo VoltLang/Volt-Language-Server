@@ -5,11 +5,11 @@ import watt.text.string;
 import watt.text.format;
 import watt.text.json.rpc;
 
+import parsec.lex.location;
 import ir = parsec.ir.ir;
 import parsec.visitor.visitor : accept;
 
-import vls.lsp.constants;
-import vls.server.error;
+import vls.lsp;
 import vls.server.symbolgatherervisitor;
 
 fn responseInitialized(ro: RequestObject) string
@@ -25,7 +25,7 @@ fn responseInitialized(ro: RequestObject) string
 						"willSave": false,
 						"willSaveWaitUntil": false,
 						"save": {
-							"includeText": false
+							"includeText": true
 						}
 					},
 					"hoverProvider": false,
@@ -104,6 +104,36 @@ fn responseSymbolInformation(ro: RequestObject, uri: string, mod: ir.Module) str
 	}
 	msg ~= "]}";
 	return msg;
+}
+
+fn notificationDiagnostic(uri: string, loc: Location, errmsg: string) string
+{
+	msg := format(`{
+		"jsonrpc": "2.0",
+		"method": "textDocument/publishDiagnostics",
+		"params": {
+			"uri": "%s",
+			"diagnostics": [{
+				"range": %s,
+				"severity": %s,
+				"message": "%s"
+			}]
+		}
+	}`, uri, locationToRange(loc), DIAGNOSTIC_ERROR, errmsg);
+	return compress(msg);
+}
+
+fn notificationNoDiagnostic(uri: string) string
+{
+		msg := format(`{
+		"jsonrpc": "2.0",
+		"method": "textDocument/publishDiagnostics",
+		"params": {
+			"uri": "%s",
+			"diagnostics": []
+		}
+	}`, uri);
+	return compress(msg);
 }
 
 private:

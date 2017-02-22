@@ -1,4 +1,4 @@
-module vls.server.error;
+module vls.lsp.error;
 
 import vls.lsp.constants;
 

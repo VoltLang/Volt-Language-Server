@@ -19,7 +19,6 @@ import ir = parsec.ir.ir;
 
 import vls.lsp;
 import vls.server.responses;
-import vls.server.requests;
 
 class VoltLanguageServer
 {
@@ -66,28 +65,23 @@ private:
 			return CONTINUE_LISTENING;
 		case "exit":
 			return STOP_LISTENING;
+		case "textDocument/documentLink":
+		case "textDocument/codeLens":
+			// For now, just parse the file so the client sees diagnostics.
+			uri: string;
+			handleTextDocument(ro, out uri);
+			return CONTINUE_LISTENING;
+		case "workspace/didChangeWatchedFiles":
+			parseChangedFiles(ro);
+			return CONTINUE_LISTENING;
 		case "textDocument/documentSymbol":
 			uri: string;
-			err := parseTextDocument(ro.params, out uri);
-			if (err !is null) {
-				logf.writefln("SENDING ERROR");
-				logf.flush();
-				send(responseError(ro, err), logf);
+			mod := handleTextDocument(ro, out uri);
+			if (mod is null) {
 				return CONTINUE_LISTENING;
 			}
-			logf.writefln("RECEIVED: textDocument/documentSymbol %s", uri);
-			logf.flush();
-			mod := parse(uri);
-			logf.writefln("Building response.");
-			logf.flush();
 			reply := responseSymbolInformation(ro, uri, mod);
-			logf.writefln("Built response.");
-			logf.flush();
-			logf.writefln("Sending functions: %s", reply);
-			logf.flush();
 			send(reply, logf);
-			//logf.writefln("%s", responseSymbolInformation(ro, uri, mod));
-			//logf.flush();
 			return CONTINUE_LISTENING;
 		default:
 			// TODO: Return error
@@ -96,6 +90,29 @@ private:
 			return CONTINUE_LISTENING;
 		}
 		assert(false);
+	}
+
+	// Given a RequestObject with DidChangeWatchedFilesParams, parse any that weren't deleted.
+	fn parseChangedFiles(ro: RequestObject)
+	{
+		uris: string[];
+		parseDidChangeWatchedFiles(ro.params, out uris);
+		foreach (uri; uris) {
+			parse(uri);
+		}
+	}
+
+	// Parse out a TextDocument from params, and run parse for the uri. Returns null on error.
+	fn handleTextDocument(ro: RequestObject, out uri: string) ir.Module
+	{
+		err := parseTextDocument(ro.params, out uri);  // vls.lsp.requests
+		if (err !is null) {
+			logf.writefln("SENDING ERROR");
+			logf.flush();
+			send(responseError(ro, err), logf);
+			return null;
+		}
+		return parse(uri);
 	}
 
 	fn parse(uri: string) ir.Module
@@ -107,29 +124,16 @@ private:
 		} else {
 			filepath := uri["file://".length .. $];
 		}
-		log("<source>");
 		src := new Source(cast(string)read(filepath), filepath);
-		log("</source>");
 		mod: ir.Module;
-		log("<ps>");
 		ps := new ParserStream(lex(src), settings);
-		log("</ps>");
 		ps.get();  // Skip begin
-		logf.writefln("A");
-		logf.flush();
 		status := parseModule(ps, out mod);
-		logf.writefln("B");
-		logf.flush();
-		if (status != ParseStatus.Succeeded) {
-			// TODO: Make the parsec error function not throw, but just give the error string.
-			foreach (err; ps.parserErrors) {
-				logf.writefln("Failure %s @ line %s", cast(i32)err.kind, err.location.line);
-				if (cast(i32)err.kind == 6) {
-					expected := cast(ParserExpected)err;
-					logf.writefln("Expected %s", expected.message);
-				}
-				logf.flush();
-			}
+		if (status != ParseStatus.Succeeded && ps.parserErrors.length >= 1) {
+			err := ps.parserErrors[0];
+			send(notificationDiagnostic(uri, err.location, err.errorMessage()), logf);
+		} else {
+			send(notificationNoDiagnostic(uri), logf);
 		}
 		logf.flush();
 		return mod;
