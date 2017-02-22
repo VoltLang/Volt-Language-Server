@@ -9,7 +9,7 @@ import parsec.lex.location;
 
 import vls.lsp.constants;
 
-class Symbol
+struct Symbol
 {
 	name: string;
 	loc: Location;
@@ -47,7 +47,7 @@ public:
 public:
 	override fn enter(func: ir.Function) Status
 	{
-		sym := new Symbol();
+		sym: Symbol;
 		sym.name = func.name;
 		sym.loc = func.location;
 		sym.type = SYMBOL_FUNCTION;
