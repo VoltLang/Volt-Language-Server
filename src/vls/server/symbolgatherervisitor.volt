@@ -52,7 +52,11 @@ private:
 public:
 	override fn enter(func: ir.Function) Status
 	{
-		addSymbol(func, func.name, SYMBOL_FUNCTION);
+		if (func.type.isProperty) {
+			addSymbol(func, func.name, SYMBOL_PROPERTY);
+		} else {
+			addSymbol(func, func.name, func.kind == ir.Function.Kind.Member ? SYMBOL_METHOD : SYMBOL_FUNCTION);
+		}
 		return Status.Continue;
 	}
 

@@ -9,6 +9,7 @@ import watt.text.json.rpc;
 import watt.process.environment;
 
 import parsec.arg;
+import parsec.postparse;
 import parsec.parser.base;
 import parsec.parser.toplevel;
 import parsec.parser.errors;
@@ -136,6 +137,7 @@ private:
 			send(notificationNoDiagnostic(uri), logf);
 		}
 		logf.flush();
+		postParse(mod);
 		return mod;
 	}
 
