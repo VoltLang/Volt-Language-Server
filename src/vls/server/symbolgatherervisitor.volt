@@ -14,11 +14,13 @@ struct Symbol
 	name: string;
 	loc: Location;
 	type: i32;  //< See the SYMBOL_ enums in vls.lsp.constants.
+	containerName: string;
 
 	fn jsonString(uri: string) string
 	{
-		return format(`{ "name": "%s", "kind": %s, "location": %s }`,
-			name, type, locationToJsonString(loc, uri));
+		return format(`{ "name": "%s", "kind": %s, "location": %s %s }`,
+			name, type, locationToJsonString(loc, uri),
+			containerName.length > 0 ? format(`, "containerName": "%s"`, containerName) : "");
 	}
 }
 
@@ -44,14 +46,54 @@ class SymbolGathererVisitor : NullVisitor
 public:
 	symbols: Symbol[];
 
+private:
+	parents: string[];
+
 public:
 	override fn enter(func: ir.Function) Status
 	{
-		sym: Symbol;
-		sym.name = func.name;
-		sym.loc = func.location;
-		sym.type = SYMBOL_FUNCTION;
-		symbols ~= sym;
+		addSymbol(func, func.name, SYMBOL_FUNCTION);
 		return Status.Continue;
+	}
+
+	override fn enter(strct: ir.Struct) Status
+	{
+		addSymbol(strct, strct.name, SYMBOL_CLASS);
+		parents ~= strct.name;
+		return Status.Continue;
+	}
+
+	override fn leave(strct: ir.Struct) Status
+	{
+		assert(parents.length > 0);
+		parents = parents[0 .. $-1];
+		return Status.Continue;
+	}
+
+	override fn enter(clss: ir.Class) Status
+	{
+		addSymbol(clss, clss.name, SYMBOL_CLASS);
+		parents ~= clss.name;
+		return Status.Continue;
+	}
+
+	override fn leave(clss: ir.Class) Status
+	{
+		assert(parents.length > 0);
+		parents = parents[0 .. $-1];
+		return Status.Continue;
+	}
+
+private:
+	fn addSymbol(node: ir.Node, name: string, type: i32)
+	{
+		sym: Symbol;
+		sym.name = name;
+		if (parents.length > 0) {
+			sym.containerName = parents[$-1];
+		}
+		sym.loc = node.location;
+		sym.type = type;
+		symbols ~= sym;
 	}
 }
