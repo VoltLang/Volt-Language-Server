@@ -26,7 +26,7 @@
 			<key>name</key>
 			<string>keyword.other.volt</string>
 			<key>match</key>
-			<string>\b(fn|dg|import|module|version|class|struct|enum|this|super|public|private|protected|override|assert|new|cast|scope|ref|out|const|scope|alias|abstract|@property|in|body|global|local)\b</string>
+			<string>\b(fn|dg|import|module|version|class|struct|interface|enum|this|super|public|private|protected|override|assert|new|cast|scope|ref|out|const|scope|alias|abstract|@property|in|body|global|local)\b</string>
 		</dict>
 		<dict>
 			<key>name</key>
