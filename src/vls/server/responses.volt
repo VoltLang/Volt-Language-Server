@@ -3,7 +3,6 @@ module vls.server.responses;
 import watt.conv;
 import watt.text.string;
 import watt.text.format;
-import watt.text.json.rpc;
 
 import parsec.lex.location;
 import ir = parsec.ir.ir;

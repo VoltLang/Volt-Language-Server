@@ -5,7 +5,6 @@ import watt.io;
 import watt.path;
 import watt.io.file;
 import watt.text.string;
-import watt.text.json.rpc;
 import watt.process.environment;
 
 import parsec.arg;

@@ -10,3 +10,4 @@ public import vls.lsp.inbound;
 public import vls.lsp.outbound;
 public import vls.lsp.error;
 public import vls.lsp.requests;
+public import vls.lsp.rpc;
