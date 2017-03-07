@@ -20,7 +20,7 @@
 			<key>name</key>
 			<string>keyword.control.volt</string>
 			<key>match</key>
-			<string>\b(if|while|do|for|foreach|with|switch|return|throw|default|case|goto|break|continue|else|foreach_reverse)\b</string>
+			<string>\b(if|while|do|for|foreach|with|switch|return|throw|default|case|goto|break|continue|else|foreach_reverse|try|catch|finally)\b</string>
 		</dict>
 		<dict>
 			<key>name</key>
