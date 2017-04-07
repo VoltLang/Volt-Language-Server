@@ -31,6 +31,7 @@ public:
 	{
 		settings = new Settings(argZero, getExecDir());
 		settings.warningsEnabled = false;
+		// TODO: Set internalD to true if the current file ends in .d.
 
 		version (Windows) {
 			env := retrieveEnvironment();
