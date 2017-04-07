@@ -31,7 +31,6 @@ public:
 	{
 		settings = new Settings(argZero, getExecDir());
 		settings.warningsEnabled = false;
-		settings.internalD = true;
 
 		version (Windows) {
 			env := retrieveEnvironment();
