@@ -35,8 +35,6 @@
 			<string>'</key>
 			<key>end</key>
 			<string>'</string>
-			<key>escape</key>
-			<string>\</string>
 		</dict>
 		<dict>
 			<key>name</key>
