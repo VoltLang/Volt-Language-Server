@@ -2,6 +2,7 @@ module vls.server.voltlanguageserver;
 
 import main : retval;
 import watt.io;
+import watt.io.streams;
 import watt.path;
 import watt.io.file;
 import watt.text.string;
@@ -20,6 +21,8 @@ import ir = parsec.ir.ir;
 import vls.lsp;
 import vls.server.responses;
 
+// version = VlsLog;
+
 class VoltLanguageServer
 {
 public:
@@ -33,19 +36,25 @@ public:
 		settings.warningsEnabled = false;
 		// TODO: Set internalD to true if the current file ends in .d.
 
-		version (Windows) {
-			env := retrieveEnvironment();
-			logf = new OutputFileStream(env.getOrNull("USERPROFILE") ~ "/Desktop/vlslog.txt");
+		version (VlsLog) {
+			version (Windows) {
+				env := retrieveEnvironment();
+				logf = new OutputFileStream(env.getOrNull("USERPROFILE") ~ "/Desktop/vlslog.txt");
+			} else {
+				logf = new OutputFileStream("/tmp/vlslog.txt");
+			}
 		} else {
-			logf = new OutputFileStream("/tmp/vlslog.txt");
+			logf = null;
 		}
 	}
 
 	/// LSP listen callback.
 	fn handle(msg: LspMessage) bool
 	{
-		logf.writefln("MESSAGE: \"%s\"\n", msg.content);
-		logf.flush();
+		version (VlsLog) {
+			logf.writefln("MESSAGE: \"%s\"\n", msg.content);
+			logf.flush();
+		}
 		return handleRO(new RequestObject(msg.content));
 	}
 
@@ -85,8 +94,10 @@ private:
 			return CONTINUE_LISTENING;
 		default:
 			// TODO: Return error
-			logf.writefln("Unknown method: %s", ro.methodName);
-			logf.flush();
+			version (VlsLog) {
+				logf.writefln("Unknown method: %s", ro.methodName);
+				logf.flush();
+			}
 			return CONTINUE_LISTENING;
 		}
 		assert(false);
@@ -107,8 +118,10 @@ private:
 	{
 		err := parseTextDocument(ro.params, out uri);  // vls.lsp.requests
 		if (err !is null) {
-			logf.writefln("SENDING ERROR");
-			logf.flush();
+			version (VlsLog) {
+				logf.writefln("SENDING ERROR");
+				logf.flush();
+			}
 			send(responseError(ro, err), logf);
 			return null;
 		}
@@ -135,14 +148,16 @@ private:
 		} else {
 			send(notificationNoDiagnostic(uri), logf);
 		}
-		logf.flush();
+		version (VlsLog) logf.flush();
 		postParse(mod);
 		return mod;
 	}
 
 	fn log(s: string)
 	{
-		logf.writefln(s);
-		logf.flush();
+		version (VlsLog) {
+			logf.writefln(s);
+			logf.flush();
+		}
 	}
 }

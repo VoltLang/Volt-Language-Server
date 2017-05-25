@@ -11,8 +11,10 @@ import watt.io.streams;
  */
 fn send(msg: string, logf: OutputFileStream)
 {
-	logf.writefln("SENDING: %s", msg);
-	logf.flush();
+	if (logf !is null) {
+		logf.writefln("SENDING: %s", msg);
+		logf.flush();
+	}
 	version (Windows) {
 		output.writefln("%s:%s", LENGTH_HEADER, msg.length);
 		output.writeln("");
