@@ -144,7 +144,7 @@ private:
 		status := parseModule(ps, out mod);
 		if (status != ParseStatus.Succeeded && ps.parserErrors.length >= 1) {
 			err := ps.parserErrors[0];
-			send(notificationDiagnostic(uri, err.location, err.errorMessage()), logf);
+			send(notificationDiagnostic(uri, err.loc, err.errorMessage()), logf);
 		} else {
 			send(notificationNoDiagnostic(uri), logf);
 		}

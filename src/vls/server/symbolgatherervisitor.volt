@@ -158,7 +158,7 @@ private:
 		if (parents.length > 0) {
 			sym.containerName = parents[$-1];
 		}
-		sym.loc = node.location;
+		sym.loc = node.loc;
 		sym.type = type;
 		symbols ~= sym;
 	}
