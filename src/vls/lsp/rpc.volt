@@ -2,7 +2,7 @@ module vls.lsp.rpc;
 
 import core.exception;
 import watt.text.format;
-import json = watt.text.json;
+import json = watt.json;
 
 class RpcException : Exception
 {

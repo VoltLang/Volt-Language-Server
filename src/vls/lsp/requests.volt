@@ -1,7 +1,7 @@
 module vls.lsp.requests;
 
 import watt.text.format;
-import watt.text.json;
+import watt.json;
 
 import vls.lsp.error;
 import vls.lsp.constants;
