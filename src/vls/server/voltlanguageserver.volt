@@ -100,7 +100,6 @@ private:
 			}
 			return CONTINUE_LISTENING;
 		}
-		assert(false);
 	}
 
 	// Given a RequestObject with DidChangeWatchedFilesParams, parse any that weren't deleted.

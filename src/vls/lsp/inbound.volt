@@ -44,7 +44,6 @@ fn listen(handle: dg(LspMessage) bool) bool
 			encode(ref buf, c);
 		}
 	}
-	assert(false);
 }
 
 private:
